@@ -7,10 +7,6 @@ const sendToEbarimt = async (payload: any) => {
   const response = await axios.post(`${EBARIMT_URL}/receipt`, payload);
   return response.data;
 };
-const getInfoEbarimt = async () => {
-  const response = await axios.get(`${EBARIMT_URL}/receipt`);
-  return response.data;
-};
 
 export const ebarimtSendReceiptB2C_Receipt = async (
   req: Request,
@@ -133,6 +129,58 @@ export const ebarimtSendReceiptB2B_Receipt = async (
     return res.status(500).json({
       message: "B2B receipt error",
       error: error.response?.data || error.message,
+    });
+  }
+};
+
+export const ebarimtSendDeleteReceipt = async (req: Request, res: Response) => {
+  try {
+    const { id, date } = req.body;
+    console.log(id, date);
+
+    const response = await axios.delete(`${EBARIMT_URL}/receipt`, {
+      data: { id, date },
+    });
+
+    return res.status(200).json({
+      message: "Deleted",
+      data: response.data,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Delete error",
+      error: error.response?.data || error.message,
+    });
+  }
+};
+
+export const ebarimtGetData = async (req: Request, res: Response) => {
+  console.log(req.body);
+  try {
+    const resEbarimt = await axios.get(`${EBARIMT_URL}/receipt`);
+    return res.status(200).json({
+      message: "Success",
+      data: resEbarimt.data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error",
+      error: error,
+    });
+  }
+};
+
+export const eBarimtGetInfo = async (req: Request, res: Response) => {
+  try {
+    const response = await axios.get(`${EBARIMT_URL}/info`);
+    return res.status(200).json({
+      message: "Success",
+      data: response.data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error",
+      error: error,
     });
   }
 };
@@ -274,55 +322,3 @@ export const ebarimtSendReceiptB2B_Receipt = async (
 //     });
 //   }
 // }
-
-export const ebarimtSendDeleteReceipt = async (req: Request, res: Response) => {
-  try {
-    const { id, date } = req.body;
-    console.log(id, date);
-
-    const response = await axios.delete(`${EBARIMT_URL}/sendData`, {
-      data: { id, date },
-    });
-
-    return res.status(200).json({
-      message: "Deleted",
-      data: response.data,
-    });
-  } catch (error: any) {
-    return res.status(500).json({
-      message: "Delete error",
-      error: error.response?.data || error.message,
-    });
-  }
-};
-
-export const ebarimtGetData = async (req: Request, res: Response) => {
-  console.log(req.body);
-  try {
-    // const resEbarimt = await axios.get(`/rest/receipt`);
-    // return res.status(200).json({
-    //     message: "Success",
-    //     data: resEbarimt,
-    // });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error",
-      error: error,
-    });
-  }
-};
-
-export const eBarimtGetInfo = async (req: Request, res: Response) => {
-  try {
-    const response = await axios.get(`${EBARIMT_URL}/info`);
-    return res.status(200).json({
-      message: "Success",
-      data: response.data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error",
-      error: error,
-    });
-  }
-};

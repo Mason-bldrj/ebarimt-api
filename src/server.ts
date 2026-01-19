@@ -6,7 +6,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 let isRunning = false;
-
+const today = new Date().toISOString().split("T")[0];
 const getInfoCheckReceiptCountAndSendData = () => {
   setInterval(
     async () => {
