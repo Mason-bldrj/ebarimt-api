@@ -1,16 +1,20 @@
 import { Request, Response } from "express";
 import axios from "axios";
 
-const EBARIMT_URL = "http://localhost:7080/rest/receipt";
+const EBARIMT_URL = "http://localhost:7080/rest";
 
 const sendToEbarimt = async (payload: any) => {
-  const response = await axios.post(EBARIMT_URL, payload);
+  const response = await axios.post(`${EBARIMT_URL}/receipt`, payload);
+  return response.data;
+};
+const getInfoEbarimt = async () => {
+  const response = await axios.get(`${EBARIMT_URL}/receipt`);
   return response.data;
 };
 
 export const ebarimtSendReceiptB2C_Receipt = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const {
@@ -73,7 +77,7 @@ export const ebarimtSendReceiptB2C_Receipt = async (
 
 export const ebarimtSendReceiptB2B_Receipt = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const {
@@ -269,12 +273,14 @@ export const ebarimtSendReceiptB2B_Receipt = async (
 //       error: error.response?.data || error.message, // :white_tick: SAFE
 //     });
 //   }
-// };
+// }
+
 export const ebarimtSendDeleteReceipt = async (req: Request, res: Response) => {
   try {
     const { id, date } = req.body;
+    console.log(id, date);
 
-    const response = await axios.delete(EBARIMT_URL, {
+    const response = await axios.delete(`${EBARIMT_URL}/sendData`, {
       data: { id, date },
     });
 
@@ -298,6 +304,21 @@ export const ebarimtGetData = async (req: Request, res: Response) => {
     //     message: "Success",
     //     data: resEbarimt,
     // });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error",
+      error: error,
+    });
+  }
+};
+
+export const eBarimtGetInfo = async (req: Request, res: Response) => {
+  try {
+    const response = await axios.get(`${EBARIMT_URL}/info`);
+    return res.status(200).json({
+      message: "Success",
+      data: response.data,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error",
